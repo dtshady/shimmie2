@@ -65,7 +65,7 @@ if(document.getElementById("post_tag_string") !== null) {
  */
 else if(document.getElementById('tag-sidebar') !== null) {
 	if (typeof tag !== "ftp://ftp." && chk !==1) {
-		if(document.location.href.search("sankakucomplex\\.com") >= 0 || document.location.href.search("gelbooru\\.com")){
+		if(document.location.href.search("sankakucomplex\\.com") >= 0 || document.location.href.search("gelbooru\\.com") ||document.location.href.search("e621\\.net") >= 0){
 			var tag = document.getElementById('tag-sidebar').innerText.replace(/ /g, "_").replace(/[\?_]*(.*?)_(\(\?\)_)?[0-9]+\n/g, "$1 ");
 		}else{
 			var tag = document.getElementById("post_tags").value;
@@ -74,10 +74,14 @@ else if(document.getElementById('tag-sidebar') !== null) {
 	tag = tag.replace(/\+/g, "%2B");
 
 	var source = "http://" + document.location.hostname + (document.location.href.match("\/post\/show\/[0-9]+") || encodeURIComponent(document.location.href.match(/\/index\.php\?page=post&s=view&id=[0-9]+/)));
+	
+	if(document.location.href.search("e621\\.net") >= 0){
+		 var rating = document.getElementById("stats").innerHTML.match("Rating: .*\>([a-zA-Z]+)")[1];
+	}else{
+		 var rating = document.getElementById("stats").innerHTML.match("Rating: ([a-zA-Z]+)")[1];
+	}
 
-	var rating = document.getElementById("stats").innerHTML.match("Rating: ([a-zA-Z]+)")[1];
-
-	if(source.search("sankakucomplex\\.com") >= 0 || source.search("konachan\\.com") >= 0){
+	if(source.search("sankakucomplex\\.com") >= 0 || source.search("konachan\\.com") >= 0 || source.search("e621\\.net") >= 0){
 		var fileinfo = document.getElementById("highres");
 		//NOTE: If highres doesn't exist, post must be flash (only sankakucomplex has flash)
 	}else if(source.search("gelbooru\\.com") >= 0){
