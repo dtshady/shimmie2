@@ -23,7 +23,6 @@ else if(CA === 2) { // New Tags
 }
 
 
-
 /*
  * Danbooru2
  * jQuery should always active here, meaning we can use jQuery in this part of the bookmarklet.
@@ -61,36 +60,50 @@ if(document.getElementById("post_tag_string") !== null) {
 }
 
 /*
- * konachan | sankakucomplex | gelbooru
+ * konachan | sankakucomplex | gelbooru | e621 | veebooru
  */
-else if(document.getElementById('tag-sidebar') !== null) {
+else if(document.getElementById("tag-sidebar") !== null || document.getElementById("tagl") !== null) {
 	if (typeof tag !== "ftp://ftp." && chk !==1) {
-		if(document.location.href.search("sankakucomplex\\.com") >= 0 || document.location.href.search("gelbooru\\.com") ||document.location.href.search("e621\\.net") >= 0){
+		if(document.location.href.search("sankakucomplex\\.com") >= 0 || document.location.href.search("gelbooru\\.com") >= 0 || document.location.href.search("e621\\.net") >= 0 || document.location.href.search("wildcritters\\.ws") >= 0){
 			var tag = document.getElementById('tag-sidebar').innerText.replace(/ /g, "_").replace(/[\?_]*(.*?)_(\(\?\)_)?[0-9]+\n/g, "$1 ");
+		}else if(document.location.href.search("veebooru\\.com") >= 0){
+			var container = document.getElementById('tagl');
+			var tlist = container.querySelector(".tag-sidebar");
+			var tag = tlist.innerText.replace(/ /g, "_").replace(/[\?_]*(.*?)_(\(\?\)_)?[0-9]+\n/g, "$1 ");
 		}else{
 			var tag = document.getElementById("post_tags").value;
 		}
 	}
 	tag = tag.replace(/\+/g, "%2B");
-
-	var source = "http://" + document.location.hostname + (document.location.href.match("\/post\/show\/[0-9]+") || encodeURIComponent(document.location.href.match(/\/index\.php\?page=post&s=view&id=[0-9]+/)));
 	
+	if(document.location.href.search("veebooru\\.com") >= 0){
+		var source = "http://" + document.location.hostname + (document.location.href.match("\/post\/view\/.*[0-9]+"));
+	}else{
+		var source = "http://" + document.location.hostname + (document.location.href.match("\/post\/show\/[0-9]+") || encodeURIComponent(document.location.href.match(/\/index\.php\?page=post&s=view&id=[0-9]+/)));
+	}
 	if(document.location.href.search("e621\\.net") >= 0){
 		 var rating = document.getElementById("stats").innerHTML.match("Rating: .*\>([a-zA-Z]+)")[1];
+	}else if(document.location.href.search("veebooru\\.com") >= 0){
+		 var rating = document.getElementById("func").innerHTML.match("Rating: ([a-zA-Z]+)")[1];
 	}else{
 		 var rating = document.getElementById("stats").innerHTML.match("Rating: ([a-zA-Z]+)")[1];
 	}
-
-	if(source.search("sankakucomplex\\.com") >= 0 || source.search("konachan\\.com") >= 0 || source.search("e621\\.net") >= 0){
+	
+	if(source.search("sankakucomplex\\.com") >= 0 || source.search("konachan\\.com") >= 0 || source.search("e621\\.net") >= 0 || source.search("wildcritters\\.ws") >= 0){
 		var fileinfo = document.getElementById("highres");
 		//NOTE: If highres doesn't exist, post must be flash (only sankakucomplex has flash)
 	}else if(source.search("gelbooru\\.com") >= 0){
 		var fileinfo = document.getElementById('pfd').parentNode.parentNode.getElementsByTagName('a')[0];
 		//gelbooru has no easy way to select the original image link, so we need to double check it is the correct link.
 		fileinfo = (fileinfo.getAttribute('href') === "#" ? document.getElementById('pfd').parentNode.parentNode.getElementsByTagName('a')[1] : fileinfo);
+	}else if(source.search("veebooru\\.com") >= 0){
+		var fileinfo = document.getElementById("image");
 	}
+		
 	fileinfo = fileinfo || document.getElementsByTagName('embed')[0]; //If fileinfo is null then image is most likely flash.
-	var furl = fileinfo.href || fileinfo.src;
+
+		var furl = fileinfo.href || fileinfo.src;
+	
 	var fs = (fileinfo.innerText.match(/[0-9]+ (KB|MB)/) || ["0 KB"])[0].split(" ");
 	var filesize = (fs[1] === "MB" ? fs[0] * 1024 : fs[0]);
 
