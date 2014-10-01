@@ -60,7 +60,7 @@ if(document.getElementById("post_tag_string") !== null) {
 }
 
 /*
- * konachan | sankakucomplex | gelbooru | e621 | veebooru
+ * konachan | sankakucomplex | gelbooru | e621 | veebooru | wildcritters
  */
 else if(document.getElementById("tag-sidebar") !== null || document.getElementById("tagl") !== null) {
 	if (typeof tag !== "ftp://ftp." && chk !==1) {
@@ -77,7 +77,7 @@ else if(document.getElementById("tag-sidebar") !== null || document.getElementBy
 	tag = tag.replace(/\+/g, "%2B");
 	
 	if(document.location.href.search("veebooru\\.com") >= 0){
-		var source = "http://" + document.location.hostname + (document.location.href.match("\/post\/view\/.*[0-9]+"));
+		var source = encodeURIComponent(window.location.href);
 	}else{
 		var source = "http://" + document.location.hostname + (document.location.href.match("\/post\/show\/[0-9]+") || encodeURIComponent(document.location.href.match(/\/index\.php\?page=post&s=view&id=[0-9]+/)));
 	}
